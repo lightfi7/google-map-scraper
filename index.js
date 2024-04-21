@@ -316,7 +316,6 @@ mongoose
     user: process.env.DB_USER,
     pass: process.env.DB_PASSWORD,
   })
-
   .then(() => {
     console.log("Connected to the database!");
     main();
