@@ -257,7 +257,11 @@ const fetch = async (activity, country, division, city) => {
 const main = async () => {
   let countries = getCountries(),
     activities = getActivities();
-  activities = activities.slice(0, activities.length / 5);
+  let begin = (process.env.INDEX * activities.length) / 5;
+  if (begin < 0) begin = 0;
+  let end = (begin * activities.length) / 5 + activities.length / 5;
+  if (end > activities.length) end = activities.length;
+  activities = activities.slice(begin, end);
   for (let i = 0; i < activities.length; i++) {
     let activity = activities[i];
     for (let country of countries) {
