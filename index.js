@@ -258,7 +258,7 @@ const main = async () => {
   let countries = getCountries(),
     activities = getActivities();
   activities = activities.slice(0, activities.length / 5);
-  for (let i = activities.length - 1; i >= 0; i++) {
+  for (let i = 0; i < activities.length; i++) {
     let activity = activities[i];
     for (let country of countries) {
       const _divisions = await getLocations({
