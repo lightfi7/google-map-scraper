@@ -205,6 +205,18 @@ const fetch = async (activity, country, division, city) => {
     if (city && city != "") search.push(city);
 
     const streets = await fetchStreets(q);
+    if (streets.length > 0) {
+      fs.writeFileSync(
+        "./log.txt",
+        JSON.stringify({
+          activity,
+          country,
+          division1: _division.text,
+          division2: __division.text,
+          city: city.text,
+        })
+      );
+    }
     for (const street of streets) {
       const places = await fetchAllNearbyPlaces(
         street.location.lat,
@@ -286,16 +298,6 @@ const main = async () => {
             admin2_code: __division.id,
           });
           for (let city of _cities) {
-            await fs.writeFileSync(
-              "./log.txt",
-              JSON.stringify({
-                activity,
-                country,
-                division1: _division.text,
-                division2: __division.text,
-                city: city.text,
-              })
-            );
             await await fetch(
               activity,
               country,
