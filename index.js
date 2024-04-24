@@ -10,8 +10,6 @@ const { io } = require("socket.io-client");
 
 const socket = io("http://35.202.239.99:1053");
 
-let googleMapsApiKey = process.env.GOOGLE_MAPS_API_KEY;
-
 const mongoose = require("mongoose");
 mongoose.Promise = global.Promise;
 
@@ -135,7 +133,7 @@ const fetchNearbyPlaces = async (latitude, longitude, radius, placeType) => {
           location,
           radius,
           type: placeType,
-          key: googleMapsApiKey,
+          key: process.env.GOOGLE_MAPS_API_KEY,
           pagetoken: nextPageToken,
         },
       });
