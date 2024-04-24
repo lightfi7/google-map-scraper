@@ -240,6 +240,10 @@ const exploreAndIndexPlaces = async (
     if (country) searchCriteria.push(country);
     if (city) searchCriteria.push(city);
 
+    const isNew = await Index.countDocuments({
+      search: { $all: searchCriteria },
+    });
+    if (isNew !== 0) return;
     const streetDetails = await fetchStreetDetails(query);
     socket.emit("message", {
       type: "cli",
