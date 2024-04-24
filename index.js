@@ -133,7 +133,7 @@ const fetchNearbyPlaces = async (latitude, longitude, radius, placeType) => {
           location,
           radius,
           type: placeType,
-          key: process.env.GOOGLE_MAPS_API_KEY,
+          key: process.env.GOOGLE_MAP_API_KEY,
           pagetoken: nextPageToken,
         },
       });
@@ -144,7 +144,7 @@ const fetchNearbyPlaces = async (latitude, longitude, radius, placeType) => {
 
         // Google Places API requires a short delay before requesting the next page
         if (nextPageToken) {
-          await new Promise((resolve) => setTimeout(resolve, 2000)); // Increased delay for reliability
+          await new Promise((resolve) => setTimeout(resolve, 1000)); // Increased delay for reliability
         }
       } else {
         console.error(
@@ -196,7 +196,7 @@ const fetchStreetDetails = async (searchQuery) => {
 
         // Google Places API recommends a short delay before requesting the next page
         if (nextPageToken) {
-          await new Promise((resolve) => setTimeout(resolve, 2000)); // Adjusted delay for better API compliance
+          await new Promise((resolve) => setTimeout(resolve, 1000)); // Adjusted delay for better API compliance
         }
       } else {
         console.error(
@@ -312,7 +312,7 @@ const main = async () => {
   const activities = getActivities();
   console.log(activities.length);
   const partitionIndex = parseInt(process.env.ID, 10) || 0;
-  const partitionSize = Math.ceil(activities.length / 5);
+  const partitionSize = Math.ceil(activities.length / 4);
   const startIndex = partitionIndex * partitionSize;
   const endIndex = Math.min(startIndex + partitionSize, activities.length);
   const selectedActivities = activities.slice(startIndex, endIndex);
