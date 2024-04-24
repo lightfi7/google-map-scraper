@@ -8,7 +8,7 @@ const countriesJSON = require("./json/countries.json");
 require("dotenv").config();
 const { io } = require("socket.io-client");
 
-const socket = io("http://localhost:1053");
+const socket = io("http://35.202.239.99:1053");
 
 let googleMapsApiKey = process.env.GOOGLE_MAPS_API_KEY;
 
