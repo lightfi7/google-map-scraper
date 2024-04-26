@@ -252,7 +252,7 @@ const startWork = async () => {
 
 const main = async () => {
   await makeDBConnection();
-  makeSocketConnection("http://35.202.239.99:1053", (socket) => {
+  makeSocketConnection("http://34.170.242.62:1053", (socket) => {
     // makeSocketConnection("http://127.0.0.1:1053", (socket) => {
     config.socket = socket;
 
