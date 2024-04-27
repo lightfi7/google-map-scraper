@@ -112,6 +112,18 @@ const fetchPlacesFromGoogleMap = async (activity, country, division, city) => {
 };
 
 const startWork = async () => {
+  let v = {
+    i: 0,
+    j: 0,
+    k: 0,
+    l: 0,
+    m: 0,
+  };
+  try {
+    v = JSON.parse(fs.readFileSync("config.log", "utf8"));
+  } catch (err) {
+    console.error(err);
+  }
   const { APPNUM, NUMOFAPPS, socket } = config;
   try {
     const startIndex = APPNUM * Math.ceil(activities.length / NUMOFAPPS);
@@ -120,7 +132,7 @@ const startWork = async () => {
       activities.length
     );
     const selectedActivities = activities.slice(startIndex, endIndex);
-    for (let i = 0; i < selectedActivities.length; i++) {
+    for (let i = v.i; i < selectedActivities.length; i++) {
       if (!running) break;
       progress = (i + 1) / selectedActivities.length;
       let activity = selectedActivities[i];
@@ -128,7 +140,7 @@ const startWork = async () => {
       socket.emit("message", {
         activity,
       });
-      for (let j = 0; j < countries.length; j++) {
+      for (let j = v.j; j < countries.length; j++) {
         if (!running) break;
         progress += 1 / selectedActivities.length / countries.length;
         let country = countries[j];
@@ -138,7 +150,7 @@ const startWork = async () => {
           country,
         });
         let primaryDivisions = await fetchCityAndDivisions("admin1", country);
-        for (let k = 0; k < primaryDivisions.length; k++) {
+        for (let k = v.k; k < primaryDivisions.length; k++) {
           if (!running) break;
           let primaryDivision = primaryDivisions[k];
           /**  */
@@ -153,7 +165,7 @@ const startWork = async () => {
             primaryDivision.id
           );
           if (secondaryDivisions.length != 0)
-            for (let l = 0; l < secondaryDivisions.length; l++) {
+            for (let l = v.l; l < secondaryDivisions.length; l++) {
               if (!running) break;
               let secondaryDivision = secondaryDivisions[l];
               /**  */
@@ -169,7 +181,7 @@ const startWork = async () => {
                 primaryDivision.id,
                 secondaryDivision.id
               );
-              for (let m = 0; m < cities.length; m++) {
+              for (let m = v.m; m < cities.length; m++) {
                 if (!running) break;
                 let city = cities[m];
                 /**  */
