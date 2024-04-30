@@ -1,4 +1,5 @@
 const axios = require("axios");
+axios
 
 async function fetchCityAndDivisions(
   type,
@@ -14,6 +15,7 @@ async function fetchCityAndDivisions(
       axios
         .get(`https://scrap.io/api/autocomplete/gmap-locations`, {
           params,
+          timeout: 5000
         })
         .then((response) => {
           resolve(response.data);
