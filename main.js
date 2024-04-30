@@ -111,10 +111,7 @@ const fetchPlacesFromGoogleMap = async (activity, country, division, city) => {
   }
 };
 
-const startWork = new Promise(async (resolve) => {
-  const onStopped = () => {
-    resolve();
-  };
+const startWork = async () => {
   let v = {
     i: 0,
     j: 0,
@@ -128,7 +125,7 @@ const startWork = new Promise(async (resolve) => {
     console.error(err);
   }
   const { APPNUM, NUMOFAPPS, socket } = config;
-  socket.add("stop", onStopped);
+
   try {
     const startIndex = APPNUM * Math.ceil(activities.length / NUMOFAPPS);
     const endIndex = Math.min(
@@ -266,7 +263,7 @@ const startWork = new Promise(async (resolve) => {
     console.error("Error in worker:", error);
     resolve();
   }
-});
+};
 
 const main = async () => {
   await makeDBConnection();
