@@ -63,6 +63,7 @@ const fetchPlacesFromGoogleMap = async (activity, country, division, city) => {
       nStreets: streets.length,
     });
     for (const street of streets) {
+      if (!running) break;
       const places = await fetchNearbyPlaces(
         street.location.lat,
         street.location.lng,
@@ -79,6 +80,7 @@ const fetchPlacesFromGoogleMap = async (activity, country, division, city) => {
         nPlaces: places.length,
       });
       for (const place of places) {
+        if (!running) break;
         await KeyWord.updateOne(
           { place_id: place.place_id },
           {
@@ -135,6 +137,7 @@ const startWork = new Promise(async (resolve) => {
     );
     const selectedActivities = activities.slice(startIndex, endIndex);
     for (let i = v.i; i < selectedActivities.length; i++) {
+      if (!running) break;
       progress = (i + 1) / selectedActivities.length;
       let activity = selectedActivities[i];
       /**  */
@@ -142,6 +145,7 @@ const startWork = new Promise(async (resolve) => {
         activity,
       });
       for (let j = v.j; j < countries.length; j++) {
+        if (!running) break;
         progress += 1 / selectedActivities.length / countries.length;
         let country = countries[j];
         /**  */
@@ -151,6 +155,7 @@ const startWork = new Promise(async (resolve) => {
         });
         let primaryDivisions = await fetchCityAndDivisions("admin1", country);
         for (let k = v.k; k < primaryDivisions.length; k++) {
+          if (!running) break;
           let primaryDivision = primaryDivisions[k];
           /**  */
           socket.emit("message", {
@@ -165,6 +170,7 @@ const startWork = new Promise(async (resolve) => {
           );
           if (secondaryDivisions.length != 0)
             for (let l = v.l; l < secondaryDivisions.length; l++) {
+              if (!running) break;
               let secondaryDivision = secondaryDivisions[l];
               /**  */
               socket.emit("message", {
@@ -180,6 +186,7 @@ const startWork = new Promise(async (resolve) => {
                 secondaryDivision.id
               );
               for (let m = v.m; m < cities.length; m++) {
+                if (!running) break;
                 let city = cities[m];
                 /**  */
                 socket.emit("message", {
@@ -219,6 +226,7 @@ const startWork = new Promise(async (resolve) => {
               null
             );
             for (let m = 0; m < cities.length; m++) {
+              if (!running) break;
               let city = cities[m];
               /**  */
               socket.emit("message", {
@@ -286,6 +294,11 @@ const main = async () => {
         socket.emit("stopped", {});
       }
     });
+
+    socket.on("stop", async (data) => {
+      running = false;
+    });
+
     socket.on("disconnect", () => {
       console.log(";)");
     });
