@@ -258,10 +258,8 @@ const startWork = async () => {
         }
       }
     }
-    resolve();
   } catch (error) {
     console.error("Error in worker:", error);
-    resolve();
   }
 };
 
