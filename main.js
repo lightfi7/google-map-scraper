@@ -63,7 +63,6 @@ const fetchPlacesFromGoogleMap = async (activity, country, division, city) => {
       nStreets: streets.length,
     });
     for (const street of streets) {
-      if (!running) break;
       const places = await fetchNearbyPlaces(
         street.location.lat,
         street.location.lng,
@@ -80,7 +79,6 @@ const fetchPlacesFromGoogleMap = async (activity, country, division, city) => {
         nPlaces: places.length,
       });
       for (const place of places) {
-        if (!running) break;
         await KeyWord.updateOne(
           { place_id: place.place_id },
           {
@@ -111,7 +109,10 @@ const fetchPlacesFromGoogleMap = async (activity, country, division, city) => {
   }
 };
 
-const startWork = async () => {
+const startWork = new Promise(async (resolve) => {
+  const onStopped = () => {
+    resolve();
+  };
   let v = {
     i: 0,
     j: 0,
@@ -125,6 +126,7 @@ const startWork = async () => {
     console.error(err);
   }
   const { APPNUM, NUMOFAPPS, socket } = config;
+  socket.add("stop", onStopped);
   try {
     const startIndex = APPNUM * Math.ceil(activities.length / NUMOFAPPS);
     const endIndex = Math.min(
@@ -133,7 +135,6 @@ const startWork = async () => {
     );
     const selectedActivities = activities.slice(startIndex, endIndex);
     for (let i = v.i; i < selectedActivities.length; i++) {
-      if (!running) break;
       progress = (i + 1) / selectedActivities.length;
       let activity = selectedActivities[i];
       /**  */
@@ -141,7 +142,6 @@ const startWork = async () => {
         activity,
       });
       for (let j = v.j; j < countries.length; j++) {
-        if (!running) break;
         progress += 1 / selectedActivities.length / countries.length;
         let country = countries[j];
         /**  */
@@ -151,7 +151,6 @@ const startWork = async () => {
         });
         let primaryDivisions = await fetchCityAndDivisions("admin1", country);
         for (let k = v.k; k < primaryDivisions.length; k++) {
-          if (!running) break;
           let primaryDivision = primaryDivisions[k];
           /**  */
           socket.emit("message", {
@@ -166,7 +165,6 @@ const startWork = async () => {
           );
           if (secondaryDivisions.length != 0)
             for (let l = v.l; l < secondaryDivisions.length; l++) {
-              if (!running) break;
               let secondaryDivision = secondaryDivisions[l];
               /**  */
               socket.emit("message", {
@@ -182,7 +180,6 @@ const startWork = async () => {
                 secondaryDivision.id
               );
               for (let m = v.m; m < cities.length; m++) {
-                if (!running) break;
                 let city = cities[m];
                 /**  */
                 socket.emit("message", {
@@ -222,7 +219,6 @@ const startWork = async () => {
               null
             );
             for (let m = 0; m < cities.length; m++) {
-              if (!running) break;
               let city = cities[m];
               /**  */
               socket.emit("message", {
@@ -257,10 +253,12 @@ const startWork = async () => {
         }
       }
     }
+    resolve();
   } catch (error) {
     console.error("Error in worker:", error);
+    resolve();
   }
-};
+});
 
 const main = async () => {
   await makeDBConnection();
@@ -288,10 +286,6 @@ const main = async () => {
         socket.emit("stopped", {});
       }
     });
-    socket.on("stop", async (data) => {
-      running = false;
-    });
-
     socket.on("disconnect", () => {
       console.log(";)");
     });
