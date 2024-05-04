@@ -3,23 +3,30 @@ const fs = require("fs");
 const axios = require("axios");
 
 const activitiesJson = require("./data/activities.json");
-const countriesJson = require("./data/countries.json");
+// const countriesJson = require("./data/countries.json");
 
 const { fetchNearbyPlaces, fetchStreets } = require("./modules/gmap");
-const { fetchCityAndDivisions } = require("./modules/scrapio");
+// const { fetchCityAndDivisions } = require("./modules/scrapio");
 // const { crawlWebsiteData } = require("./modules/webanalyze");
-const { makeDBConnection, GMap, KeyWord } = require("./database");
+const {
+  makeDBConnection,
+  GMap,
+  KeyWord,
+  Division,
+  Country,
+  SubDivision,
+} = require("./database");
 const { makeSocketConnection } = require("./modules/socket");
 
-const getCountries = () => {
-  return countriesJson.map((c) => c.cca2);
-};
+// const getCountries = () => {
+//   return countriesJson.map((c) => c.cca2);
+// };
 
 const getActivities = () => {
   return activitiesJson.map((a) => a.text);
 };
 
-const countries = getCountries();
+// const countries = getCountries();
 const activities = getActivities();
 
 let running = false;
@@ -141,16 +148,20 @@ const startWork = async () => {
       socket.emit("message", {
         activity,
       });
+      let countries = await Country.find({});
       for (let j = v.j; j < countries.length; j++) {
         if (!running) break;
         progress += 1 / selectedActivities.length / countries.length;
-        let country = countries[j];
+        let country = countries[j].cca2;
         /**  */
         socket.emit("message", {
           activity,
           country,
         });
-        let primaryDivisions = await fetchCityAndDivisions("admin1", country);
+        // let primaryDivisions = await fetchCityAndDivisions("admin1", country);
+        let primaryDivisions = await Division.find({
+          country: countries[j]._id,
+        });
         for (let k = v.k; k < primaryDivisions.length; k++) {
           if (!running) break;
           let primaryDivision = primaryDivisions[k];
@@ -160,11 +171,15 @@ const startWork = async () => {
             country,
             primaryDivision: primaryDivision.text,
           });
-          let secondaryDivisions = await fetchCityAndDivisions(
-            "admin2",
-            country,
-            primaryDivision.id
-          );
+          // let secondaryDivisions = await fetchCityAndDivisions(
+          //   "admin2",
+          //   country,
+          //   primaryDivision.id
+          // );
+          let secondaryDivisions = await SubDivision.find({
+            country: countries[j]._id,
+            division1: primaryDivision._id,
+          });
           if (secondaryDivisions.length != 0)
             for (let l = v.l; l < secondaryDivisions.length; l++) {
               if (!running) break;
@@ -176,12 +191,17 @@ const startWork = async () => {
                 primaryDivision: primaryDivision.text,
                 secondaryDivisions: secondaryDivisions.text,
               });
-              let cities = await fetchCityAndDivisions(
-                "city",
-                country,
-                primaryDivision.id,
-                secondaryDivision.id
-              );
+              // let cities = await fetchCityAndDivisions(
+              //   "city",
+              //   country,
+              //   primaryDivision.id,
+              //   secondaryDivision.id
+              // );
+              let cities = await City.find({
+                country: countries[j]._id,
+                division1: primaryDivision._id,
+                division2: secondaryDivision._id,
+              });
               for (let m = v.m; m < cities.length; m++) {
                 if (!running) break;
                 let city = cities[m];
@@ -216,12 +236,17 @@ const startWork = async () => {
               }
             }
           else {
-            let cities = await fetchCityAndDivisions(
-              "city",
-              country,
-              primaryDivision.id,
-              null
-            );
+            // let cities = await fetchCityAndDivisions(
+            //   "city",
+            //   country,
+            //   primaryDivision.id,
+            //   null
+            // );
+            let cities = await City.find({
+              country: countries[j]._id,
+              division1: primaryDivision._id,
+              division2: secondaryDivision._id,
+            });
             for (let m = 0; m < cities.length; m++) {
               if (!running) break;
               let city = cities[m];

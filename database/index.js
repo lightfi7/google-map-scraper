@@ -3,6 +3,10 @@ const GMap = require("./models/gmap.model");
 const Website = require("./models/website.model");
 const Index = require("./models/index.model");
 const KeyWord = require("./models/keyword.model");
+const City = require("./models/city.model");
+const Division = require("./models/division.model");
+const SubDivision = require("./models/sub_division.model");
+const Country = require("./models/country.model");
 mongoose.Promise = global.Promise;
 
 const makeDBConnection = () =>
@@ -15,8 +19,8 @@ const makeDBConnection = () =>
         user: process.env.DB_USER,
         pass: process.env.DB_PASSWORD,
       })
-    // mongoose
-    //   .connect("mongodb://127.0.0.1:27017/homestead")
+      // mongoose
+      //   .connect("mongodb://127.0.0.1:27017/homestead")
       .then(() => {
         console.log("Connected to the database!");
         resolve();
@@ -27,4 +31,14 @@ const makeDBConnection = () =>
       });
   });
 
-module.exports = { makeDBConnection, GMap, Index, Website, KeyWord };
+module.exports = {
+  makeDBConnection,
+  GMap,
+  Index,
+  Website,
+  KeyWord,
+  City,
+  Division,
+  SubDivision,
+  Country,
+};
