@@ -14,6 +14,7 @@ const {
   KeyWord,
   Division,
   Country,
+  City,
   SubDivision,
 } = require("./database");
 const { makeSocketConnection } = require("./modules/socket");
@@ -149,6 +150,7 @@ const startWork = async () => {
         activity,
       });
       let countries = await Country.find({});
+      console.log(countries.length);
       for (let j = v.j; j < countries.length; j++) {
         if (!running) break;
         progress += 1 / selectedActivities.length / countries.length;
@@ -245,7 +247,7 @@ const startWork = async () => {
             let cities = await City.find({
               country: countries[j]._id,
               division1: primaryDivision._id,
-              division2: secondaryDivision._id,
+              division2: null,
             });
             for (let m = 0; m < cities.length; m++) {
               if (!running) break;
