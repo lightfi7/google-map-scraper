@@ -203,7 +203,7 @@ const startWork = async () => {
                   city.text
                 );
                 fs.writeFileSync(
-                  "config.json",
+                  "config.log",
                   JSON.stringify({
                     i,
                     j,
