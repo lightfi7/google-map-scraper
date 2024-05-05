@@ -150,12 +150,10 @@ const startWork = async () => {
         activity,
       });
       let countries = await Country.find({});
-      console.log(countries.length);
       for (let j = v.j; j < countries.length; j++) {
         if (!running) break;
         progress += 1 / selectedActivities.length / countries.length;
         let country = countries[j].country.cca2;
-        console.log(country);
         /**  */
         socket.emit("message", {
           activity,
@@ -181,7 +179,7 @@ const startWork = async () => {
           // );
           let secondaryDivisions = await SubDivision.find({
             country: countries[j]._id,
-            division1: primaryDivision._id,
+            division: primaryDivision._id,
           });
           if (secondaryDivisions.length != 0)
             for (let l = v.l; l < secondaryDivisions.length; l++) {
@@ -202,8 +200,8 @@ const startWork = async () => {
               // );
               let cities = await City.find({
                 country: countries[j]._id,
-                division1: primaryDivision._id,
-                division2: secondaryDivision._id,
+                division: primaryDivision._id,
+                sub_division: secondaryDivision._id,
               });
               for (let m = v.m; m < cities.length; m++) {
                 if (!running) break;
@@ -247,8 +245,8 @@ const startWork = async () => {
             // );
             let cities = await City.find({
               country: countries[j]._id,
-              division1: primaryDivision._id,
-              division2: null,
+              division: primaryDivision._id,
+              sub_division: null,
             });
             for (let m = 0; m < cities.length; m++) {
               if (!running) break;
