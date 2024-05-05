@@ -234,7 +234,7 @@ const startWork = async () => {
                     m,
                   })
                 );
-                await new Promise((resolve) => setTimeout(resolve, 1000));
+                await new Promise((resolve) => setTimeout(resolve, 200));
               }
             }
           else {
@@ -279,7 +279,7 @@ const startWork = async () => {
                   m,
                 })
               );
-              await new Promise((resolve) => setTimeout(resolve, 1000));
+              await new Promise((resolve) => setTimeout(resolve, 200));
             }
           }
         }
