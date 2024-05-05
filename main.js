@@ -111,7 +111,7 @@ const fetchPlacesFromGoogleMap = async (activity, country, division, city) => {
           }
         }
         console.log(place.place_id);
-        await new Promise((resolve) => setTimeout(resolve, 1000)); // Throttle requests
+        await new Promise((resolve) => setTimeout(resolve, 500)); // Throttle requests
       }
     }
   } catch (err) {
@@ -233,7 +233,7 @@ const startWork = async () => {
                     m,
                   })
                 );
-                await new Promise((resolve) => setTimeout(resolve, 200));
+                // await new Promise((resolve) => setTimeout(resolve, 200));
               }
             }
           else {
@@ -278,7 +278,7 @@ const startWork = async () => {
                   m,
                 })
               );
-              await new Promise((resolve) => setTimeout(resolve, 200));
+              // await new Promise((resolve) => setTimeout(resolve, 200));
             }
           }
         }
