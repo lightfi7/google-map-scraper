@@ -154,7 +154,8 @@ const startWork = async () => {
       for (let j = v.j; j < countries.length; j++) {
         if (!running) break;
         progress += 1 / selectedActivities.length / countries.length;
-        let country = countries[j].cca2;
+        let country = countries[j].country.cca2;
+        console.log(country);
         /**  */
         socket.emit("message", {
           activity,
@@ -171,7 +172,7 @@ const startWork = async () => {
           socket.emit("message", {
             activity,
             country,
-            primaryDivision: primaryDivision.text,
+            primaryDivision: primaryDivision.division.text,
           });
           // let secondaryDivisions = await fetchCityAndDivisions(
           //   "admin2",
@@ -190,8 +191,8 @@ const startWork = async () => {
               socket.emit("message", {
                 activity,
                 country,
-                primaryDivision: primaryDivision.text,
-                secondaryDivisions: secondaryDivisions.text,
+                primaryDivision: primaryDivision.division.text,
+                secondaryDivisions: secondaryDivisions.sub_division.text,
               });
               // let cities = await fetchCityAndDivisions(
               //   "city",
@@ -206,7 +207,7 @@ const startWork = async () => {
               });
               for (let m = v.m; m < cities.length; m++) {
                 if (!running) break;
-                let city = cities[m];
+                let city = cities[m].city;
                 /**  */
                 socket.emit("message", {
                   activity,
@@ -251,7 +252,7 @@ const startWork = async () => {
             });
             for (let m = 0; m < cities.length; m++) {
               if (!running) break;
-              let city = cities[m];
+              let city = cities[m].city;
               /**  */
               socket.emit("message", {
                 activity,
