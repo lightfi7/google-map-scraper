@@ -263,7 +263,7 @@ const startWork = async () => {
                 activity,
                 country,
                 {
-                  division1: primaryDivision.text,
+                  division1: primaryDivision.division.text,
                   division2: "",
                 },
                 city.text
