@@ -190,7 +190,7 @@ const startWork = async () => {
                 activity,
                 country,
                 primaryDivision: primaryDivision.division.text,
-                secondaryDivisions: secondaryDivisions.sub_division.text,
+                secondaryDivision: secondaryDivision.sub_division.text,
               });
               // let cities = await fetchCityAndDivisions(
               //   "city",
@@ -211,7 +211,7 @@ const startWork = async () => {
                   activity,
                   country,
                   primaryDivision: primaryDivision.division.text,
-                  secondaryDivisions: secondaryDivisions.sub_division.text,
+                  secondaryDivision: secondaryDivision.sub_division.text,
                   city: city.text,
                 });
                 await fetchPlacesFromGoogleMap(
@@ -255,8 +255,8 @@ const startWork = async () => {
               socket.emit("message", {
                 activity,
                 country,
-                primaryDivision: primaryDivision.text,
-                secondaryDivisions: secondaryDivisions.text,
+                primaryDivision: primaryDivision.division.text,
+                // secondaryDivision: secondaryDivision.sub_division.text,
                 city: city.text,
               });
               await fetchPlacesFromGoogleMap(
