@@ -210,16 +210,16 @@ const startWork = async () => {
                 socket.emit("message", {
                   activity,
                   country,
-                  primaryDivision: primaryDivision.text,
-                  secondaryDivisions: secondaryDivisions.text,
+                  primaryDivision: primaryDivision.division.text,
+                  secondaryDivisions: secondaryDivisions.sub_division.text,
                   city: city.text,
                 });
                 await fetchPlacesFromGoogleMap(
                   activity,
                   country,
                   {
-                    division1: primaryDivision.text,
-                    division2: secondaryDivision.text,
+                    division1: primaryDivision.division.text,
+                    division2: secondaryDivision.sub_division.text,
                   },
                   city.text
                 );
