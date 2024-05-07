@@ -163,23 +163,10 @@ const startWork = async () => {
         let primaryDivisions = await Division.find({
           country: countries[j]._id,
         });
-        for (let k = v.k; k < primaryDivisions.length; k++) {
-          if (!running) break;
-          let primaryDivision = primaryDivisions[k];
-          /**  */
-          socket.emit("message", {
-            activity,
-            country,
-            primaryDivision: primaryDivision.division.text,
-          });
-          // let secondaryDivisions = await fetchCityAndDivisions(
-          //   "admin2",
-          //   country,
-          //   primaryDivision.id
-          // );
+        if (primaryDivisions.length == 0) {
           let secondaryDivisions = await SubDivision.find({
             country: countries[j]._id,
-            division: primaryDivision._id,
+            division: null,
           });
           if (secondaryDivisions.length != 0)
             for (let l = v.l; l < secondaryDivisions.length; l++) {
@@ -189,7 +176,7 @@ const startWork = async () => {
               socket.emit("message", {
                 activity,
                 country,
-                primaryDivision: primaryDivision.division.text,
+                primaryDivision: null,
                 secondaryDivision: secondaryDivision.sub_division.text,
               });
               // let cities = await fetchCityAndDivisions(
@@ -200,7 +187,7 @@ const startWork = async () => {
               // );
               let cities = await City.find({
                 country: countries[j]._id,
-                division: primaryDivision._id,
+                division: null,
                 sub_division: secondaryDivision._id,
               });
               for (let m = v.m; m < cities.length; m++) {
@@ -210,7 +197,7 @@ const startWork = async () => {
                 socket.emit("message", {
                   activity,
                   country,
-                  primaryDivision: primaryDivision.division.text,
+                  primaryDivision: null,
                   secondaryDivision: secondaryDivision.sub_division.text,
                   city: city.text,
                 });
@@ -218,7 +205,7 @@ const startWork = async () => {
                   activity,
                   country,
                   {
-                    division1: primaryDivision.division.text,
+                    division1: null,
                     division2: secondaryDivision.sub_division.text,
                   },
                   city.text
@@ -228,7 +215,7 @@ const startWork = async () => {
                   JSON.stringify({
                     i,
                     j,
-                    k,
+                    k: 0,
                     l,
                     m,
                   })
@@ -245,7 +232,7 @@ const startWork = async () => {
             // );
             let cities = await City.find({
               country: countries[j]._id,
-              division: primaryDivision._id,
+              division: null,
               sub_division: null,
             });
             for (let m = 0; m < cities.length; m++) {
@@ -255,7 +242,7 @@ const startWork = async () => {
               socket.emit("message", {
                 activity,
                 country,
-                primaryDivision: primaryDivision.division.text,
+                primaryDivision: null,
                 // secondaryDivision: secondaryDivision.sub_division.text,
                 city: city.text,
               });
@@ -263,8 +250,8 @@ const startWork = async () => {
                 activity,
                 country,
                 {
-                  division1: primaryDivision.division.text,
-                  division2: "",
+                  division1: null,
+                  division2: null,
                 },
                 city.text
               );
@@ -273,7 +260,7 @@ const startWork = async () => {
                 JSON.stringify({
                   i,
                   j,
-                  k,
+                  k: 0,
                   l: 0,
                   m,
                 })
@@ -281,7 +268,126 @@ const startWork = async () => {
               // await new Promise((resolve) => setTimeout(resolve, 200));
             }
           }
-        }
+        } else
+          for (let k = v.k; k < primaryDivisions.length; k++) {
+            if (!running) break;
+            let primaryDivision = primaryDivisions[k];
+            /**  */
+            socket.emit("message", {
+              activity,
+              country,
+              primaryDivision: primaryDivision.division.text,
+            });
+            // let secondaryDivisions = await fetchCityAndDivisions(
+            //   "admin2",
+            //   country,
+            //   primaryDivision.id
+            // );
+            let secondaryDivisions = await SubDivision.find({
+              country: countries[j]._id,
+              division: primaryDivision._id,
+            });
+            if (secondaryDivisions.length != 0)
+              for (let l = v.l; l < secondaryDivisions.length; l++) {
+                if (!running) break;
+                let secondaryDivision = secondaryDivisions[l];
+                /**  */
+                socket.emit("message", {
+                  activity,
+                  country,
+                  primaryDivision: primaryDivision.division.text,
+                  secondaryDivision: secondaryDivision.sub_division.text,
+                });
+                // let cities = await fetchCityAndDivisions(
+                //   "city",
+                //   country,
+                //   primaryDivision.id,
+                //   secondaryDivision.id
+                // );
+                let cities = await City.find({
+                  country: countries[j]._id,
+                  division: primaryDivision._id,
+                  sub_division: secondaryDivision._id,
+                });
+                for (let m = v.m; m < cities.length; m++) {
+                  if (!running) break;
+                  let city = cities[m].city;
+                  /**  */
+                  socket.emit("message", {
+                    activity,
+                    country,
+                    primaryDivision: primaryDivision.division.text,
+                    secondaryDivision: secondaryDivision.sub_division.text,
+                    city: city.text,
+                  });
+                  await fetchPlacesFromGoogleMap(
+                    activity,
+                    country,
+                    {
+                      division1: primaryDivision.division.text,
+                      division2: secondaryDivision.sub_division.text,
+                    },
+                    city.text
+                  );
+                  fs.writeFileSync(
+                    "config.log",
+                    JSON.stringify({
+                      i,
+                      j,
+                      k,
+                      l,
+                      m,
+                    })
+                  );
+                  // await new Promise((resolve) => setTimeout(resolve, 200));
+                }
+              }
+            else {
+              // let cities = await fetchCityAndDivisions(
+              //   "city",
+              //   country,
+              //   primaryDivision.id,
+              //   null
+              // );
+              let cities = await City.find({
+                country: countries[j]._id,
+                division: primaryDivision._id,
+                sub_division: null,
+              });
+              for (let m = 0; m < cities.length; m++) {
+                if (!running) break;
+                let city = cities[m].city;
+                /**  */
+                socket.emit("message", {
+                  activity,
+                  country,
+                  primaryDivision: primaryDivision.division.text,
+                  // secondaryDivision: secondaryDivision.sub_division.text,
+                  city: city.text,
+                });
+                await fetchPlacesFromGoogleMap(
+                  activity,
+                  country,
+                  {
+                    division1: primaryDivision.division.text,
+                    division2: "",
+                  },
+                  city.text
+                );
+                fs.writeFileSync(
+                  "config.log",
+                  JSON.stringify({
+                    i,
+                    j,
+                    k,
+                    l: 0,
+                    m,
+                  })
+                );
+                // await new Promise((resolve) => setTimeout(resolve, 200));
+              }
+            }
+          }
       }
     }
   } catch (error) {
