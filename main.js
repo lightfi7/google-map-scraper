@@ -148,6 +148,7 @@ const startWork = async () => {
       /**  */
       socket.emit("message", {
         activity,
+        progress,
       });
       let countries = await Country.find({});
       for (let j = v.j; j < countries.length; j++) {
@@ -158,6 +159,7 @@ const startWork = async () => {
         socket.emit("message", {
           activity,
           country,
+          progress,
         });
         // let primaryDivisions = await fetchCityAndDivisions("admin1", country);
         let primaryDivisions = await Division.find({
@@ -178,6 +180,7 @@ const startWork = async () => {
                 country,
                 primaryDivision: null,
                 secondaryDivision: secondaryDivision.sub_division.text,
+                progress,
               });
               // let cities = await fetchCityAndDivisions(
               //   "city",
@@ -200,6 +203,7 @@ const startWork = async () => {
                   primaryDivision: null,
                   secondaryDivision: secondaryDivision.sub_division.text,
                   city: city.text,
+                  progress,
                 });
                 await fetchPlacesFromGoogleMap(
                   activity,
@@ -245,6 +249,7 @@ const startWork = async () => {
                 primaryDivision: null,
                 // secondaryDivision: secondaryDivision.sub_division.text,
                 city: city.text,
+                progress,
               });
               await fetchPlacesFromGoogleMap(
                 activity,
@@ -277,6 +282,7 @@ const startWork = async () => {
               activity,
               country,
               primaryDivision: primaryDivision.division.text,
+              progress,
             });
             // let secondaryDivisions = await fetchCityAndDivisions(
             //   "admin2",
@@ -297,6 +303,7 @@ const startWork = async () => {
                   country,
                   primaryDivision: primaryDivision.division.text,
                   secondaryDivision: secondaryDivision.sub_division.text,
+                  progress,
                 });
                 // let cities = await fetchCityAndDivisions(
                 //   "city",
@@ -319,6 +326,7 @@ const startWork = async () => {
                     primaryDivision: primaryDivision.division.text,
                     secondaryDivision: secondaryDivision.sub_division.text,
                     city: city.text,
+                    progress,
                   });
                   await fetchPlacesFromGoogleMap(
                     activity,
@@ -364,6 +372,7 @@ const startWork = async () => {
                   primaryDivision: primaryDivision.division.text,
                   // secondaryDivision: secondaryDivision.sub_division.text,
                   city: city.text,
+                  progress,
                 });
                 await fetchPlacesFromGoogleMap(
                   activity,
