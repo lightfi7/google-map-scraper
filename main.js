@@ -170,7 +170,7 @@ const startWork = async () => {
             country: countries[j]._id,
             division: null,
           });
-          if (secondaryDivisions.length != 0)
+          if (secondaryDivisions.length != 0) {
             for (let l = v.l; l < secondaryDivisions.length; l++) {
               if (!running) break;
               let secondaryDivision = secondaryDivisions[l];
@@ -226,7 +226,10 @@ const startWork = async () => {
                 );
                 // await new Promise((resolve) => setTimeout(resolve, 200));
               }
+              v.m = 0;
             }
+            v.l = 0;
+          }
           else {
             // let cities = await fetchCityAndDivisions(
             //   "city",
@@ -239,7 +242,7 @@ const startWork = async () => {
               division: null,
               sub_division: null,
             });
-            for (let m = 0; m < cities.length; m++) {
+            for (let m = v.m; m < cities.length; m++) {
               if (!running) break;
               let city = cities[m].city;
               /**  */
@@ -272,6 +275,7 @@ const startWork = async () => {
               );
               // await new Promise((resolve) => setTimeout(resolve, 200));
             }
+            v.m = 0;
           }
         } else
           for (let k = v.k; k < primaryDivisions.length; k++) {
@@ -293,7 +297,7 @@ const startWork = async () => {
               country: countries[j]._id,
               division: primaryDivision._id,
             });
-            if (secondaryDivisions.length != 0)
+            if (secondaryDivisions.length != 0) {
               for (let l = v.l; l < secondaryDivisions.length; l++) {
                 if (!running) break;
                 let secondaryDivision = secondaryDivisions[l];
@@ -349,7 +353,10 @@ const startWork = async () => {
                   );
                   // await new Promise((resolve) => setTimeout(resolve, 200));
                 }
+                v.m = 0;
               }
+              v.l = 0;
+            }
             else {
               // let cities = await fetchCityAndDivisions(
               //   "city",
@@ -362,7 +369,7 @@ const startWork = async () => {
                 division: primaryDivision._id,
                 sub_division: null,
               });
-              for (let m = 0; m < cities.length; m++) {
+              for (let m = v.m; m < cities.length; m++) {
                 if (!running) break;
                 let city = cities[m].city;
                 /**  */
@@ -395,10 +402,14 @@ const startWork = async () => {
                 );
                 // await new Promise((resolve) => setTimeout(resolve, 200));
               }
+              v.m = 0;
             }
           }
+        v.k = 0;
       }
+      v.j = 0;
     }
+    v.i = 0;
   } catch (error) {
     console.error("Error in worker:", error);
   }
