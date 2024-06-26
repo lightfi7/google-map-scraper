@@ -58,9 +58,8 @@ const fetchPlacesFromGoogleMap = async (activity, country, division, city) => {
 
   try {
     console.log(filter);
-    let n = await KeyWord.countDocuments(filter);
-    console.log(n);
-    if (n !== 0) return;
+    const re = await KeyWord.findOne(filter);
+    if (re == null) return;
     const streets = await fetchStreets(query);
     socket.emit("message", {
       activity,
